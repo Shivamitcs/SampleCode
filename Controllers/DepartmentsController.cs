@@ -65,11 +65,15 @@ namespace SampleCode.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Logo,ParentDepartmentId")] Department department)
+        public async Task<IActionResult> Create([Bind("Id,Name,Logo,ParentDepartmentId")] DepartmentModel department)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(department);
+                var d = new Department();                
+                d.Name = department.Name;
+                d.ParentDepartmentId=department.ParentDepartmentId;
+                d.Logo=department.Logo;
+                _context.Add(d);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -95,7 +99,7 @@ namespace SampleCode.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Logo,ParentDepartmentId")] Department department)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Logo,ParentDepartmentId")] DepartmentModel department)
         {
             if (id != department.Id)
             {
@@ -106,7 +110,12 @@ namespace SampleCode.Controllers
             {
                 try
                 {
-                    _context.Update(department);
+                    var d = new Department();
+                    d.Id = department.Id;
+                    d.Name = department.Name;
+                    d.ParentDepartmentId = department.ParentDepartmentId;
+                    d.Logo = department.Logo;
+                    _context.Update(d);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
